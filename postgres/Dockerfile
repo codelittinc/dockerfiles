@@ -29,7 +29,8 @@ RUN chown postgres:postgres /var/lib/pgsql/data
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+ADD databases.txt /databases.txt
+
 EXPOSE 5432
 
-USER postgres
 CMD ["/entrypoint.sh"]
