@@ -33,4 +33,4 @@ RUN make install
 # Our typical port which our Go programs listen on
 EXPOSE 9000
 
-CMD ['/usr/local/go/bin/go']
+CMD ['/bin/bash -l']
