@@ -12,6 +12,7 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 RUN locale-gen en_US.UTF-8 && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
+RUN apt-get update
 RUN apt-get install -y wget
 RUN wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list

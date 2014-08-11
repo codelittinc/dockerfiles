@@ -27,4 +27,11 @@ RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
 
 ENV PATH /usr/local/rvm/gems/ruby-2.1.2/bin:/usr/local/rvm/gems/ruby-2.1.2@global/bin:/usr/local/rvm/rubies/ruby-2.1.2/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
+#ITEMS MISSING FOR INCOIN
+#RUN apt-get install nodejs
+#RUN apt-get install npm
+#RUN apt-get install libfreetype6
+#RUN apt-get install libfreetype6-dev
+#RUN apt-get install libfontconfig
+
 EXPOSE 3000

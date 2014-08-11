@@ -1,2 +1,2 @@
-database-name-here
-other-database-name-here
+payroll-dev
+payroll-test
