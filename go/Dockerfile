@@ -9,8 +9,8 @@ RUN apt-get install -y wget git mercurial build-essential
 
 # Golang
 WORKDIR /tmp
-RUN wget -q https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.3.linux-amd64.tar.gz
+RUN wget -q https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.3.1.linux-amd64.tar.gz
 
 RUN mkdir /go
 RUN echo 'export PATH=/usr/local/go/bin:$PATH' >> /etc/profile.d/golang.sh
