@@ -19,8 +19,8 @@ RUN apt-get update && \
 
 # Golang
 WORKDIR /tmp
-RUN wget -q https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go1.3.1.linux-amd64.tar.gz
+RUN wget -q https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go1.4.linux-amd64.tar.gz
 
 RUN mkdir /go
 RUN echo 'export PATH=/usr/local/go/bin:$PATH' >> /etc/profile.d/golang.sh
@@ -38,6 +38,11 @@ WORKDIR /opt
 RUN git clone https://github.com/pote/gvp.git
 WORKDIR /opt/gvp
 RUN ./configure && make install
+
+WORKDIR /opt
+RUN git clone git@github.com:technosophos/gpm-local.git
+WORKDIR /opt/gpm-local
+RUN make install
 
 WORKDIR /go
 
