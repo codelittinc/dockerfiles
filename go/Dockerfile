@@ -49,4 +49,4 @@ WORKDIR /go
 # Our typical port which our Go programs listen on
 EXPOSE 9000
 
-CMD ['/bin/bash -l']
+CMD ['/bin/bash', '-l']
