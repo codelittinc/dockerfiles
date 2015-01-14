@@ -40,7 +40,7 @@ WORKDIR /opt/gvp
 RUN ./configure && make install
 
 WORKDIR /opt
-RUN git clone git@github.com:technosophos/gpm-local.git
+RUN git clone https://github.com/technosophos/gpm-local.git
 WORKDIR /opt/gpm-local
 RUN make install
 
