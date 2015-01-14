@@ -26,7 +26,7 @@ RUN mkdir /go
 RUN echo 'export PATH=/usr/local/go/bin:$PATH' >> /etc/profile.d/golang.sh
 RUN echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh
 RUN touch ~/.bash_profile
-RUN echo 'export PATH=$PATH:/usr/local/go/biN' >> ~/.bash_profile
+RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bash_profile
 RUN source ~/.bash_profile
 
 # Install GPM and GVP
