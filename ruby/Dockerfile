@@ -27,6 +27,7 @@ RUN apt-get update \
     libxslt-dev \
     libpq-dev \
     ruby2.2 \
+    ruby2.2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN gem install bundler --no-ri --no-rdoc
