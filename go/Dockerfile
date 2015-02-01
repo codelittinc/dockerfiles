@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:14.04
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 MAINTAINER Tony Holdstock-Brown
