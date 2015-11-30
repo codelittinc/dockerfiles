@@ -1,7 +1,3 @@
-# This is our DEVELOPMENT dockerfile.
-#
-# This uses Codelitt's Ruby 2.2 image found at:
-# https://github.com/codelittinc/dockerfiles/blob/master/ruby/Dockerfile
 FROM codelittinc/ruby:2.2
 MAINTAINER Codelitt, Inc.
 
@@ -10,7 +6,7 @@ VOLUME ["/share"]
 
 ENV LANGUAGE en_US.UTF-8
 
-# Install dependencies and rails-api
+# Install dependencies
 RUN apt-get update \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/* \
