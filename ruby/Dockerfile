@@ -1,35 +1,31 @@
-FROM ubuntu
-MAINTAINER Tony Holdstock-Brown
+# This is our DEVELOPMENT dockerfile.
+#
+# This uses Codelitt's Ruby 2.2 image found at:
+# https://github.com/codelittinc/dockerfiles/blob/master/ruby/Dockerfile
+FROM codelittinc/ruby:2.2
+MAINTAINER Codelitt, Inc.
 
-RUN echo "$(cat /etc/apt/sources.list) universe multiverse" > /etc/apt/sources.list
+# Mount any shared volumes from host to container @ /share
+VOLUME ["/share"]
 
 ENV LANGUAGE en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-RUN locale-gen en_US.UTF-8 && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
+# Install dependencies and rails-api
 RUN apt-get update \
-    && apt-get install -y wget software-properties-common \
-    && wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-add-repository ppa:brightbox/ruby-ng
-
-RUN apt-get update \
-    && apt-get install -y --force-yes \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    ruby2.2 \
+    ruby2.2-dev \
     build-essential \
     curl \
-    git \
     zlib1g-dev \
     libssl-dev \
     libreadline-dev \
     libyaml-dev \
     libxml2-dev \
     libxslt-dev \
-    libpq-dev \
-    ruby2.2 \
-    ruby2.2-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libpq-dev
 
-RUN gem install bundler --no-ri --no-rdoc
+WORKDIR /share
 
-EXPOSE 3000
+CMD ["/bin/bash", "-l"]
