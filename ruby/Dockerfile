@@ -1,4 +1,5 @@
-# MAINTAINER Codelitt, Inc.
+FROM codelittinc/ruby:2.2
+MAINTAINER Codelitt, Inc.
 
 # Mount any shared volumes from host to container @ /share
 VOLUME ["/share"]
