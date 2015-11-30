@@ -8,6 +8,8 @@ MAINTAINER Codelitt, Inc.
 # Mount any shared volumes from host to container @ /share
 VOLUME ["/share"]
 
+ENV LANGUAGE en_US.UTF-8
+
 # Install dependencies and rails-api
 RUN apt-get update \
     && apt-get install -y nodejs \
