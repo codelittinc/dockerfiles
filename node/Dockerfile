@@ -4,8 +4,6 @@ FROM buildpack-deps:wheezy
 VOLUME ["/share"]
 WORKDIR /share
 
-
-ADD package.json /share/package.json
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
@@ -31,6 +29,7 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc
 
+ADD package.json /share/package.json
 RUN npm install
 
 CMD [ "node" ]
