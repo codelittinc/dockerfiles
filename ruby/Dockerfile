@@ -1,27 +1,74 @@
-FROM codelittinc/ruby:2.2
+FROM phusion/passenger-full
 MAINTAINER Codelitt, Inc.
 
-# Mount any shared volumes from host to container @ /share
-VOLUME ["/share"]
 
-ENV LANGUAGE en_US.UTF-8
+# skip installing gem documentation
+RUN mkdir -p /usr/local/etc \
+	&& { \
+		echo 'install: --no-document'; \
+		echo 'update: --no-document'; \
+	} >> /usr/local/etc/gemrc
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/* \
-    ruby2.2 \
-    ruby2.2-dev \
-    build-essential \
-    curl \
-    zlib1g-dev \
-    libssl-dev \
-    libreadline-dev \
-    libyaml-dev \
-    libxml2-dev \
-    libxslt-dev \
-    libpq-dev
+ENV RUBY_MAJOR 2.1
+ENV RUBY_VERSION 2.1.10
+ENV RUBY_DOWNLOAD_SHA256 fb2e454d7a5e5a39eb54db0ec666f53eeb6edc593d1d2b970ae4d150b831dd20
+ENV RUBYGEMS_VERSION 2.6.8
 
-WORKDIR /share
+# some of ruby's build scripts are written in ruby
+#   we purge system ruby later to make sure our final image uses what we just built
+RUN set -ex \
+	\
+	&& buildDeps=' \
+		bison \
+		libgdbm-dev \
+		ruby \
+	' \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends $buildDeps wget autoconf\
+	&& rm -rf /var/lib/apt/lists/* \
+	\
+	&& wget -O ruby.tar.gz "https://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz" \
+	&& echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.gz" | sha256sum -c - \
+	\
+	&& mkdir -p /usr/src/ruby \
+	&& tar -xzf ruby.tar.gz -C /usr/src/ruby --strip-components=1 \
+	&& rm ruby.tar.gz \
+	\
+	&& cd /usr/src/ruby \
+	\
+# hack in "ENABLE_PATH_CHECK" disabling to suppress:
+#   warning: Insecure world writable dir
+	&& { \
+		echo '#define ENABLE_PATH_CHECK 0'; \
+		echo; \
+		cat file.c; \
+	} > file.c.new \
+	&& mv file.c.new file.c \
+	\
+	&& autoconf \
+	&& ./configure --disable-install-doc \
+	&& make -j"$(nproc)" \
+	&& make install \
+	\
+	&& apt-get purge -y --auto-remove $buildDeps \
+	&& cd / \
+	&& rm -r /usr/src/ruby \
+	\
+	&& gem update --system "$RUBYGEMS_VERSION"
 
-CMD ["/bin/bash", "-l"]
+ENV BUNDLER_VERSION 1.13.6
+
+RUN gem install bundler --version "$BUNDLER_VERSION"
+
+# install things globally, for great justice
+# and don't create ".bundle" in all our apps
+ENV GEM_HOME /usr/local/bundle
+ENV BUNDLE_PATH="$GEM_HOME" \
+	BUNDLE_BIN="$GEM_HOME/bin" \
+	BUNDLE_SILENCE_ROOT_WARNING=1 \
+	BUNDLE_APP_CONFIG="$GEM_HOME"
+ENV PATH $BUNDLE_BIN:$PATH
+RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
+	&& chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
+
+CMD [ "irb" ]
