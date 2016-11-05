@@ -1,4 +1,4 @@
-FROM buildpack-deps:wheezy
+FROM phusion/baseimage
 
 # Mount any shared volumes from host to container @ /share
 VOLUME ["/share"]
@@ -20,7 +20,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 5.5.0
+ENV NODE_VERSION 7.0.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -29,8 +29,4 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc
 
-ADD package.json /share/package.json
-RUN npm install
-
 CMD [ "node" ]
-EXPOSE 3000
