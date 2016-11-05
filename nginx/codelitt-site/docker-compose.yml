@@ -1,0 +1,10 @@
+version: '2'
+services:
+  test:
+    build: .
+    ports:
+      - "80:80"
+networks:
+  default:
+    external:
+      name: codelitt
