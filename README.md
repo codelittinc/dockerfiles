@@ -38,4 +38,5 @@ mounting.
 You can find issues when docker builds the image if the volumes are
 mounted after a build from the empty host as it will write over the build. 
 
+If not clear, read [this](https://stackoverflow.com/questions/30043872/docker-compose-node-modules-not-present-in-a-volume-after-npm-install-succeeds)
 
