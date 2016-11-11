@@ -1,9 +1,5 @@
 FROM phusion/baseimage
 
-# Mount any shared volumes from host to container @ /share
-VOLUME ["/share"]
-WORKDIR /share
-
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
