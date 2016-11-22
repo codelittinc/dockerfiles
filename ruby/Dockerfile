@@ -1,19 +1,23 @@
-FROM codelittinc/ruby:2.2
+# Codelitt's Ruby image based off Phusion's baseimage
+#
+# This image is tagged in Docker Hub as codelittin/ruby:[ruby_version]-phusion
+FROM phusion/baseimage:0.9.19
 MAINTAINER Codelitt, Inc.
 
-# Mount any shared volumes from host to container @ /share
-VOLUME ["/share"]
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
 
 ENV LANGUAGE en_US.UTF-8
 
 # Install dependencies
-RUN apt-get update \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/* \
-    ruby2.2 \
-    ruby2.2-dev \
+RUN apt-add-repository ppa:brightbox/ruby-ng
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -y ruby2.3 \
+    ruby2.3-dev \
     build-essential \
     curl \
+    git \
     zlib1g-dev \
     libssl-dev \
     libreadline-dev \
@@ -21,7 +25,4 @@ RUN apt-get update \
     libxml2-dev \
     libxslt-dev \
     libpq-dev
-
-WORKDIR /share
-
-CMD ["/bin/bash", "-l"]
+RUN rm -rf /var/lib/apt/lists/*
