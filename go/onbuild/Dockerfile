@@ -1,4 +1,4 @@
-FROM codelittinc/golang
+FROM codelittinc/go
 
 RUN mkdir -p /go/src/app
 WORKDIR /go/src/app
