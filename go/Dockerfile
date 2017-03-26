@@ -1,52 +1,27 @@
-FROM ubuntu
+FROM buildpack-deps:jessie-scm
 
-MAINTAINER Tony Holdstock-Brown
+# gcc for cgo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		g++ \
+		gcc \
+		libc6-dev \
+		make \
+		pkg-config \
+	&& rm -rf /var/lib/apt/lists/*
 
-# First, install python-software-properties to add-apt-repository for mercurial.
-# Then, install wget, git etc. for Golang.
-RUN apt-get update && \
-    apt-get install -y \
-    software-properties-common \
-    python-software-properties && \
-    add-apt-repository -y ppa:tortoisehg-ppa/releases && \
-    apt-get update && \
-    apt-get install -y wget \
-    git \
-    mercurial \
-    build-essential \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+ENV GOLANG_VERSION 1.8
+ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_SHA256 53ab94104ee3923e228a2cb2116e5e462ad3ebaeea06ff04463479d7f12d27ca
 
-# Golang
-WORKDIR /tmp
-RUN wget -q https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go1.4.1.linux-amd64.tar.gz
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
 
-RUN mkdir /go \
-    && echo 'export PATH=/usr/local/go/bin:$PATH' >> /etc/profile.d/golang.sh \
-    && echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-# Install GPM and GVP
-WORKDIR /opt
-RUN git clone https://github.com/pote/gpm.git
-WORKDIR /opt/gpm
-RUN git checkout v1.2.3 \
-    && ./configure \
-    && make install
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+WORKDIR $GOPATH
 
-WORKDIR /opt
-RUN git clone https://github.com/pote/gvp.git
-WORKDIR /opt/gvp
-RUN ./configure && make install
-
-WORKDIR /opt
-RUN git clone https://github.com/technosophos/gpm-local.git
-WORKDIR /opt/gpm-local
-RUN make install
-
-WORKDIR /go
-
-# Our typical port which our Go programs listen on
-EXPOSE 9000
-
-CMD ['/bin/bash', '-l']
+COPY go-wrapper /usr/local/bin/
