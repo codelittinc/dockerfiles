@@ -1,4 +1,6 @@
-FROM buildpack-deps:jessie-scm
+FROM phusion/baseimage 
+
+MAINTAINER Codelitt Inc
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
