@@ -27,7 +27,7 @@ RUN set -ex \
 		ruby \
 	' \
 	&& apt-get update \
-	&& apt-get install -y --no-install-recommends $buildDeps wget autoconf xz-utils build-essential openssl zlib1g-dev libssl-dev libpq-dev \
+	&& apt-get install -y --no-install-recommends $buildDeps wget autoconf xz-utils build-essential openssl zlib1g-dev libssl-dev libpq-dev libreadline-dev \
 	&& rm -rf /var/lib/apt/lists/* \
 	\
 	&& wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
