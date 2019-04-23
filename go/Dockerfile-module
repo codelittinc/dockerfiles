@@ -1,10 +1,11 @@
 FROM golang:1.12-alpine as builder
 
-RUN mkdir -p $GOPATH/src/app
-WORKDIR $GOPATH/src/app
+RUN mkdir -p /app
+WORKDIR /app
 ADD . .
 
-RUN GO111MODULE=off GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-w -s"  -o $GOPATH/src/app
+# remove "-mod vendor" for none vendored repo
+RUN GO111MODULE=on GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-w -s"  -mod vendor -o /app/app
 
 FROM alpine:3.9 as ca
 RUN adduser -D -g '' appuser
