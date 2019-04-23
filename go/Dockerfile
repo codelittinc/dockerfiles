@@ -4,6 +4,7 @@ RUN mkdir -p $GOPATH/src/app
 WORKDIR $GOPATH/src/app
 ADD . .
 
+RUN go get ./...
 RUN GO111MODULE=off GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-w -s"  -o $GOPATH/src/app
 
 FROM alpine:3.9 as ca
